@@ -231,6 +231,7 @@ int yy=0;
  // I included this variable because the delete key was inputing keystrokes of both 126 and 51.
  static int deleteCheck = 0;
 
+ // check for control + d, which will be used to delete a full line
 if (c == 4) {
         uprintf("Delete Row\n");
         for (int i = row + linepos; i < 99; i++) {
@@ -245,22 +246,25 @@ if (c == 4) {
         return 0;
     }
 
+    // escape character
   if (c == 27) {
         escape = 1;
         uprintf("escape\n");
         return 0;
     }
+    //check for command sequence
     if (escape && c == '[') {
         gotsquare = 1;
         uprintf("got square\n");
         return 0;
     }
+    // check for the first element of the delete key
     if (gotsquare && c == '3') {
         deleteCheck = 1;
         return 0;
     }
 
-
+	// check for the second element of the delete key
     if (deleteCheck && c == '~') {
         uprintf("delete\n");
         lines[row + linepos][col] = ' ';
@@ -272,8 +276,7 @@ if (c == 4) {
             row++;
         }
         putcursor(cursor);
-        escape = 0;
-        gotsquare = 0;
+
         return 0;
     }
 
@@ -290,8 +293,6 @@ if (c == 4) {
         putcursor(cursor);
      	return 0;
   }
-
-
 
   if (gotsquare && c == 'A'){
      // uparrow
@@ -354,9 +355,6 @@ if (c == 4) {
     putcursor(cursor);
     return 0;
   }
-
-
-
 
 lines[row+linepos][col]=c;
   col++;
