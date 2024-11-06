@@ -266,6 +266,9 @@ int yy=0;
   if (gotsquare && c == 'C') {
     // down arrow
     uprintf("rightarrow\n");
+    if (col < 79) {
+        col++;
+    }
     putcursor(cursor);
     return;
 }
@@ -273,6 +276,9 @@ int yy=0;
   if (gotsquare && c == 'D') {
     // down arrow
     uprintf("leftarrow\n");
+    if (col > 0) {
+        col--;
+    }
     putcursor(cursor);
     return;
 }
