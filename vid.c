@@ -231,6 +231,20 @@ int yy=0;
  // I included this variable because the delete key was inputing keystrokes of both 126 and 51.
  static int deleteCheck = 0;
 
+if (c == 4) {
+        uprintf("Delete Row\n");
+        for (int i = row + linepos; i < 99; i++) {
+            for (int j = 0; j < 80; j++) {
+                lines[i][j] = lines[i + 1][j];
+            }
+        }
+        for (int j = 0; j < 80; j++) {
+            lines[99][j] = ' ';
+        }
+        putcursor(cursor);
+        return 0;
+    }
+
   if (c == 27) {
         escape = 1;
         uprintf("escape\n");
@@ -246,6 +260,7 @@ int yy=0;
         return 0;
     }
 
+
     if (deleteCheck && c == '~') {
         uprintf("delete\n");
         lines[row + linepos][col] = ' ';
@@ -259,7 +274,6 @@ int yy=0;
         putcursor(cursor);
         escape = 0;
         gotsquare = 0;
-        esc_seq = 0;
         return 0;
     }
 
@@ -276,6 +290,8 @@ int yy=0;
         putcursor(cursor);
      	return 0;
   }
+
+
 
   if (gotsquare && c == 'A'){
      // uparrow
@@ -321,6 +337,9 @@ int yy=0;
     return 0;
 }
 
+  // for debugging, print the key stroke
+	uprintf("Key stroke: %d\n", c);
+
   gotsquare=0;
   
   if (c=='\r'){
@@ -336,8 +355,7 @@ int yy=0;
     return 0;
   }
 
-  // for debugging, print the key stroke
-	uprintf("Key stroke: %d\n", c);
+
 
 
 lines[row+linepos][col]=c;
