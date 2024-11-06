@@ -241,7 +241,7 @@ int yy=0;
   escape=0;
   if (gotsquare && c == 'A'){
      // uparrow
- uprintf("uparrow\n");
+ 	uprintf("uparrow\n");
      if (row ==0 && linepos>0)
         linepos--;
      if (row>0)
@@ -250,6 +250,33 @@ int yy=0;
      putcursor(cursor);
      return;
   }
+
+  if (gotsquare && c == 'B') {
+    // down arrow
+    uprintf("downarrow\n");
+    if (row == 29) {
+        linepos++;
+    } else {
+        row++;
+    }
+    putcursor(cursor);
+    return;
+}
+
+  if (gotsquare && c == 'C') {
+    // down arrow
+    uprintf("rightarrow\n");
+    putcursor(cursor);
+    return;
+}
+
+  if (gotsquare && c == 'D') {
+    // down arrow
+    uprintf("leftarrow\n");
+    putcursor(cursor);
+    return;
+}
+
   gotsquare=0;
   
   if (c=='\r'){

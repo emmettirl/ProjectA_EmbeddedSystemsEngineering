@@ -89,6 +89,7 @@ struct menu menu1[] = { {{{"sub-menu 1",1,0},{"sub-menu 2",2,0}},2},
 {{{"john",-1,print2},{"mainmenu",0,print1}},2},
 {{{"hello2",-1,print2},{"good2",-1,print3},{"mainmenu",0,0}},3}};
 char * msg1 = "hello world\n fff\ngood\n";
+
 int main()
 {
    char c, *p;
