@@ -246,6 +246,8 @@ int kputc(char c)
 
 	static int mode = 0;
 
+    static char copyBuffer[81];
+
 	// check for control + d, which will be used to delete a full line
 	if (c == 4) {
 		uprintf("Delete Row\n");
@@ -267,6 +269,27 @@ int kputc(char c)
 		uprintf("escape\n");
 		return 0;
 	}
+
+    if (c == 3) { // Ctrl+C
+		uprintf("copy\n");
+
+        for (int i = 0; i < 80; i++) {
+        	copyBuffer[i] = lines[row + linepos][i];
+    	}
+    	copyBuffer[80] = '\0'; // Null-terminate the copied line
+    	uprintf("Line copied\n");
+        return 0;
+    }
+
+    if (c == 22) { // Ctrl+Shift+V as the emulation of the normal paste keybind Ctrl+V is pasting the host os clipboard
+		uprintf("paste\n");
+        for (int i = 0; i < 80; i++) {
+        	if (copyBuffer[i] == '\0') break;
+        	lines[row + linepos][i] = copyBuffer[i];
+    	}
+    	uprintf("Line pasted\n");
+    	return 0;
+    }
 
 	//check for command sequence
 	if (escape && c == '[') {
