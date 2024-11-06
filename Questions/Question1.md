@@ -1,4 +1,6 @@
 # Question 1
+#### Emmett Fitzharris | R00222357
+
 _a.) Give a brief overview of how the editor in question 2 will work using the kputc
 function and the lines array._
 
@@ -29,10 +31,11 @@ The lines array is an array of strings that is used to store the lines of text t
 The array is defined in t.c and is used in uart.c to store the lines of text that the user inputs.
 It stores 100 lines of text, each with a maximum of 80 characters terminated by a null character.
 
+---
 
 b.)
 _Explain how you would modify the code to handle (you cannot just use a huge
 array and you don’t have the malloc function as there is no heap):
-i) long lines
-ii) scrolling left and right with long lines.
-iii)handle long files e.g. 1000 lines long._
+- i) long lines
+- ii) scrolling left and right with long lines.
+- iii)handle long files e.g. 1000 lines long._

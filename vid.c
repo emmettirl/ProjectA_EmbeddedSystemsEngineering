@@ -14,6 +14,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ********************************************************************/
 
+// Modified by Emmett Fitzharris | R00222357
+
 extern char _binary_font_start;
 extern int color;
 extern char lines[100][81];
