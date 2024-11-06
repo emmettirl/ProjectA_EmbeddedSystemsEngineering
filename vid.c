@@ -228,17 +228,55 @@ int kputc(char c)
 {
 int yy=0;
  clrcursor();
-  if (c==27){
-     escape = 1;
-     uprintf("escape\n");
-     return;
+ // I included this variable because the delete key was inputing keystrokes of both 126 and 51.
+ static int deleteCheck = 0;
+
+  if (c == 27) {
+        escape = 1;
+        uprintf("escape\n");
+        return 0;
+    }
+    if (escape && c == '[') {
+        gotsquare = 1;
+        uprintf("got square\n");
+        return 0;
+    }
+    if (gotsquare && c == '3') {
+        deleteCheck = 1;
+        return 0;
+    }
+
+    if (deleteCheck && c == '~') {
+        uprintf("delete\n");
+        lines[row + linepos][col] = ' ';
+        clearchar(' ', row, col);
+        if (col < 79) {
+            col++;
+        } else if (row < 29) {
+            col = 0;
+            row++;
+        }
+        putcursor(cursor);
+        escape = 0;
+        gotsquare = 0;
+        esc_seq = 0;
+        return 0;
+    }
+
+  if (c==127){
+     uprintf("backspace\n");
+     if (col > 0) {
+            col--;
+        } else if (row > 0) {
+            row--;
+            col = 79;
+        }
+        lines[row + linepos][col] = ' ';
+        clearchar(' ', row, col);
+        putcursor(cursor);
+     	return 0;
   }
-  if (escape && c=='['){
-      uprintf("got square\n");
-     gotsquare=1;
-     return;
-  }
-  escape=0;
+
   if (gotsquare && c == 'A'){
      // uparrow
  	uprintf("uparrow\n");
@@ -248,7 +286,7 @@ int yy=0;
        row--;
      
      putcursor(cursor);
-     return;
+     return 0;
   }
 
   if (gotsquare && c == 'B') {
@@ -260,7 +298,7 @@ int yy=0;
         row++;
     }
     putcursor(cursor);
-    return;
+    return 0;
 }
 
   if (gotsquare && c == 'C') {
@@ -270,7 +308,7 @@ int yy=0;
         col++;
     }
     putcursor(cursor);
-    return;
+    return 0;
 }
 
   if (gotsquare && c == 'D') {
@@ -280,7 +318,7 @@ int yy=0;
         col--;
     }
     putcursor(cursor);
-    return;
+    return 0;
 }
 
   gotsquare=0;
@@ -295,9 +333,12 @@ int yy=0;
     }
     //uprintf("2row=%d col=%d\n", row, col);
     putcursor(cursor);
-    return;
+    return 0;
   }
- 
+
+  // for debugging, print the key stroke
+	uprintf("Key stroke: %d\n", c);
+
 
 lines[row+linepos][col]=c;
   col++;
