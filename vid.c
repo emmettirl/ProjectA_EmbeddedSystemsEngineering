@@ -238,16 +238,24 @@ putcursor(cursor);
 
 }
 int escape,gotsquare;
+
+
+/********************************************************************/
+// Start of changes
+/********************************************************************/
+
 int kputc(char c)
 {
 	int yy=0;
 	clrcursor();
-	// I included this variable because the delete key was inputing keystrokes of both 126 and 51.
+	// I included these variables because the delete and insert key was inputing keystrokes of both 126 and 51/52.
 	static int deleteCheck = 0;
 	static int insertCheck = 0;
 
+    // This variable is used to toggle between insert and overwrite mode
 	static int mode = 0;
 
+    // This variable is used to store current line in a when copying and pasting
     static char copyBuffer[81];
 
 	// check for control + d, which will be used to delete a full line
@@ -272,18 +280,21 @@ int kputc(char c)
 		return 0;
 	}
 
-    if (c == 3) { // Ctrl+C
+    // Ctrl+C
+    if (c == 3) {
 		uprintf("copy\n");
 
         for (int i = 0; i < 80; i++) {
         	copyBuffer[i] = lines[row + linepos][i];
     	}
-    	copyBuffer[80] = '\0'; // Null-terminate the copied line
+        // Null-terminate the copied line
+    	copyBuffer[80] = '\0';
     	uprintf("Line copied\n");
         return 0;
     }
 
-    if (c == 22) { // Ctrl+Shift+V as the emulation of the normal paste keybind Ctrl+V is pasting the host os clipboard
+    // Ctrl+Shift+V as the emulation of the normal paste keybind Ctrl+V is pasting the host os clipboard
+    if (c == 22) {
 		uprintf("paste\n");
         for (int i = 0; i < 80; i++) {
         	if (copyBuffer[i] == '\0') break;
@@ -337,6 +348,7 @@ int kputc(char c)
 	return 0;
 	}
 
+    // check for the backspace key
 	if (c==127){
 		uprintf("backspace\n");
 		if (col > 0) {
@@ -351,8 +363,8 @@ int kputc(char c)
 		return 0;
 	}
 
+    // Handle Up Arrow Press
 	if (gotsquare && c == 'A'){
-		// uparrow
 		uprintf("uparrow\n");
 		if (row ==0 && linepos>0)
 			{linepos--;}
@@ -363,8 +375,8 @@ int kputc(char c)
 		return 0;
 	}
 
+    // Handle Down Arrow Press
 	if (gotsquare && c == 'B') {
-		// down arrow
 		uprintf("downarrow\n");
 		if (row == 29) {
 			linepos++;
@@ -375,8 +387,8 @@ int kputc(char c)
 		return 0;
 	}
 
+    // Handle Right Arrow Press
 	if (gotsquare && c == 'C') {
-		// down arrow
 		uprintf("rightarrow\n");
 		if (col < 79) {
 			col++;
@@ -385,8 +397,8 @@ int kputc(char c)
 		return 0;
 	}
 
+    // Handle Left Arrow Press
 	if (gotsquare && c == 'D') {
-		// down arrow
 		uprintf("leftarrow\n");
 		if (col > 0) {
 			col--;
@@ -397,9 +409,9 @@ int kputc(char c)
 
 	// for debugging, print the key stroke
 	uprintf("Key stroke: %d\n", c);
-
 	gotsquare=0;
 
+    // check for newline character
 	if (c=='\r'){
 		col=0;
 		row++;
@@ -412,6 +424,7 @@ int kputc(char c)
 		return 0;
 	}
 
+    // based on the mode, either insert by shifting the following characters to the right or overwrite by replacing the character
 	if (mode == 1){
 		for (int i = 79; i > col; i--) {
 			lines[row + linepos][i] = lines[row + linepos][i - 1];
@@ -429,6 +442,11 @@ int kputc(char c)
 		}
 	}
 }
+
+/********************************************************************/
+// End of changes
+/********************************************************************/
+
 
 int kprints(char *s)
 {

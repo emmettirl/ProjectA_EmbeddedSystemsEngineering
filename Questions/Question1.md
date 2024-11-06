@@ -13,7 +13,7 @@ This program is broken down into the following files:
 - vid.c which handles the video output
 - xmodem.c which handles the file transfer
 
-Many of these functions are normally provided by the standard library, but in this case, they are implemented in the program.
+Many of these functions are normally provided by the standard library, but in this case, they are implemented directly in the program.
 The reason for this is that the program is designed to run on an ARM system that does not have a standard library built in.
 
 kputc() is a function defined in vid.c that is used to handle user input.
